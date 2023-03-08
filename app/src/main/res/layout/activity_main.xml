@@ -41,4 +41,15 @@
         tools:listitem="@layout/item_kamus"
         tools:itemCount="5"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_24"
+        app:backgroundTint="@color/purple_500"
+        app:tint="@color/white"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"/>
+
 </RelativeLayout>
