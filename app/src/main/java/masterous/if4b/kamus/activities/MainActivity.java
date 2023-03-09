@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         kamusHelper = new KamusHelper(this);
-        kamusViewAdapter = new KamusViewAdapter();
+        kamusViewAdapter = new KamusViewAdapter(this::onItemKamusClick);
         binding.rvKamus.setLayoutManager(new LinearLayoutManager(this));
         binding.rvKamus.setAdapter(kamusViewAdapter);
 
@@ -58,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void onItemKamusClick(Kamus kamus, int i) {
+        Toast.makeText(this, "Item ke-" + i + " : " + kamus.getTitle(),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
