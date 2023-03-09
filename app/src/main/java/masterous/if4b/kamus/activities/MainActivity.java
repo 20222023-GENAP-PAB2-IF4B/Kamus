@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -37,7 +38,16 @@ public class MainActivity extends AppCompatActivity {
         binding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String strSearch = binding.etSearch.getText().toString();
 
+                if (TextUtils.isEmpty(strSearch)) {
+                    getAllData();
+                } else {
+                    kamusHelper.open();
+                    ArrayList<Kamus> kamus = kamusHelper.getAllDataByTitle(strSearch);
+                    //kamusHelper.close();
+                    kamusViewAdapter.setData(kamus);
+                }
             }
         });
 
@@ -59,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void getAllData() {
         kamusHelper.open();
         ArrayList<Kamus> kamusArrayList = kamusHelper.getAllData();
-        kamusHelper.close();
+        //kamusHelper.close();
         kamusViewAdapter.setData(kamusArrayList);
     }
 }
