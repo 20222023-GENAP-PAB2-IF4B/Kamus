@@ -17,7 +17,7 @@ public class KamusViewAdapter extends RecyclerView.Adapter<KamusViewAdapter.View
     private ArrayList<Kamus> data = new ArrayList<>();
     private ItemClickListener<Kamus> itemClickListener;
 
-    public KamusViewAdapter(ItemClickListener<Kamus> itemClickListener) {
+    public void setOnItemClickListener(ItemClickListener<Kamus> itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
@@ -42,6 +42,13 @@ public class KamusViewAdapter extends RecyclerView.Adapter<KamusViewAdapter.View
             @Override
             public void onClick(View v) {
                 itemClickListener.onItemClick(kamus, pos);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                itemClickListener.onItemLongClick(kamus, pos);
+                return false;
             }
         });
     }

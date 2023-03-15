@@ -1,8 +1,10 @@
 package masterous.if4b.kamus.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import masterous.if4b.kamus.adapters.KamusViewAdapter;
 import masterous.if4b.kamus.databases.KamusHelper;
 import masterous.if4b.kamus.databinding.ActivityMainBinding;
 import masterous.if4b.kamus.models.Kamus;
+import masterous.if4b.kamus.utilities.ItemClickListener;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -30,7 +33,47 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         kamusHelper = new KamusHelper(this);
-        kamusViewAdapter = new KamusViewAdapter(this::onItemKamusClick);
+        kamusViewAdapter = new KamusViewAdapter();
+        kamusViewAdapter.setOnItemClickListener(new ItemClickListener<Kamus>() {
+            @Override
+            public void onItemClick(Kamus data, int position) {
+                Toast.makeText(MainActivity.this, "Item ke-" +
+                                position + " : " + data.getTitle(),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(Kamus data, int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Perhatian");
+                builder.setMessage("Anda memilih " + data.getTitle() +
+                        ". Pilih perintah yang Anda inginkan");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        kamusHelper.open();
+                        int deleted = kamusHelper.deleteData(data.getId());
+                        if (deleted == -1) {
+                            Toast.makeText(MainActivity.this,
+                                    "Gagal menghapus data!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this,
+                                    "Berhasil menghapus data!", Toast.LENGTH_SHORT).show();
+                            getAllData();
+                        }
+                    }
+                });
+                builder.setPositiveButton("Ubah", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+            }
+        });
+
         binding.rvKamus.setLayoutManager(new LinearLayoutManager(this));
         binding.rvKamus.setAdapter(kamusViewAdapter);
 
@@ -59,11 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void onItemKamusClick(Kamus kamus, int i) {
-        Toast.makeText(this, "Item ke-" + i + " : " + kamus.getTitle(),
-                Toast.LENGTH_SHORT).show();
     }
 
     @Override
